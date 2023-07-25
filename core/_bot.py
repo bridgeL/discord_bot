@@ -93,6 +93,8 @@ bot = Bot(TOKEN)
 
 @bot.client.event
 async def on_message(msg: discord.message.Message):
+    print(msg.content)
+    
     # exclude self
     if msg.author == bot.client.user:
         return
