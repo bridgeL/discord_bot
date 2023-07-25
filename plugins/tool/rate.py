@@ -27,8 +27,9 @@ params = {
 
 @app.on_cmd("rate")
 async def _():
-    await app.send("稍等...正在请求百度API")
+    await app.send("查询今日澳元汇率：稍等...正在请求百度API")
     res = requests.get(url=url, headers=headers, params=params)
     data = res.json()["data"][0]["info"]
-    data = "\n".join(" ".join(v for v in d.values()) for d in data)
+    data = "\n".join(
+        f"{d['name']} {d['value']},   趋势: {d['status']} " for d in data)
     await app.send(data)
