@@ -1,5 +1,6 @@
 from core import App
 import requests
+from table2ascii import table2ascii as t2a, PresetStyle
 
 app = App("rate")
 app.help = "查询今日澳元汇率"
@@ -27,9 +28,19 @@ params = {
 
 @app.on_cmd("rate")
 async def _():
-    await app.send("查询今日澳元汇率：稍等...正在请求百度API")
+    await app.send("查询今日澳元汇率：稍等...")
     res = requests.get(url=url, headers=headers, params=params)
     data = res.json()["data"][0]["info"]
-    data = "\n".join(
-        f"{d['name']} {d['value']},   趋势: {d['status']} " for d in data)
-    await app.send(data)
+    for d in data:
+        d.pop("ename")
+        d["name"] = d["name"][:-1]
+        # d.pop("name")
+
+    output = t2a(
+        header=list(data[0].keys()),
+        body=[list(d.values()) for d in data],
+        style=PresetStyle.thin_compact
+    )
+
+    await app.send(f"```\n{output}\n```")
+    await app.send("\n数据收集自百度")

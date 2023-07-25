@@ -12,6 +12,8 @@ discord = "^2.3.1"
 aiocron = "^1.8"
 pydantic = "^2.0.3"
 requests = "^2.31.0"
+table2ascii = "^1.1.1"
+autopep8 = "^2.0.2"
 
 
 [build-system]
