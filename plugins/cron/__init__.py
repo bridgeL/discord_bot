@@ -1,41 +1,58 @@
 import json
 import aiocron
 from pathlib import Path
-from core import on_start, on_cmd, send, get_current_args, get_cid
+from core import App
 
+app = App("cron")
+app.help = '''
+添加定时任务
+add [name] [desc] [cron]
 
-def _add(cron, name, desc, cid):
-    @aiocron.crontab(cron, start=False)
-    async def task():
-        await send(f"[{name}]\n{desc}", cid=cid)
-    return task
+移除定时任务
+remove [name]
+
+查看所有定时任务
+list
+
+退出管理界面
+exit
+
+cron语法规则：https://help.aliyun.com/document_detail/133509.html
+
+注意，本定时任务应用最高精度为1分钟，请不要设置秒级精度的cron
+'''.strip()
 
 
 class Task:
-    def __init__(self, cid, name, desc, cron: str) -> None:
+    def __init__(self, cid, name, desc, cron: str, uid) -> None:
         self.cid = cid
         self.name = name
         self.desc = desc
         self.cron = cron
+        self.uid = uid
 
     def dict(self):
         return {
             "cid": self.cid,
             "name": self.name,
             "desc": self.desc,
-            "cron": self.cron
+            "cron": self.cron,
+            "uid": self.uid
         }
 
     def start(self):
-        self.task = _add(self.cron, self.name, self.desc, self.cid)
-        self.task.start()
+        @aiocron.crontab(self.cron, start=False)
+        async def timer():
+            await app.send(f"定时任务：[{self.name}]\n{self.desc}", cid=self.cid)
+        self.timer = timer
+        self.timer.start()
 
     def stop(self):
-        self.task.stop()
+        self.timer.stop()
 
     def __str__(self) -> str:
         cron = self.cron.replace("*", "\\*")
-        return f'''[{self.name}]\n{self.desc}\ncron表达式: {cron}'''
+        return f'''[{self.name}]\n{self.desc}\ncron: {cron}\n添加者：{self.uid}'''
 
 
 class Manager:
@@ -49,13 +66,13 @@ class Manager:
             task.start()
 
     def get(self, name):
-        cid = get_cid()
+        cid = app.bot.cid
         for task in self.tasks:
             if task.cid == cid and task.name == name:
                 return task
 
     def get_all(self):
-        cid = get_cid()
+        cid = app.bot.cid
         return [task for task in self.tasks if task.cid == cid]
 
     def save(self):
@@ -68,7 +85,7 @@ class Manager:
         if task:
             return
 
-        task = Task(get_cid(), name, desc, cron)
+        task = Task(app.bot.cid, name, desc, cron, app.bot.uid)
         self.tasks.append(task)
         task.start()
         self.save()
@@ -87,47 +104,53 @@ class Manager:
 manager = Manager()
 
 
-@on_start
+@app.bot.on_start
 async def _():
     manager.start_all()
 
 
-@on_cmd("list cron")
+@app.on_cmd("cron")
+async def _():
+    app.state = "cron"
+    await app.send("已启动cron")
+    await app.send_help()
+
+
+@app.on_cmd("exit", "cron")
+async def _():
+    app.state = ""
+    await app.send("已关闭cron")
+
+
+@app.on_cmd("list", "cron")
 async def _():
     tasks = manager.get_all()
+    if not tasks:
+        await app.send("目前没有任何定时任务，使用add命令来添加一个吧！")
+        return
+
     for task in tasks:
-        await send(str(task))
+        await app.send(str(task))
 
 
-@on_cmd("add cron")
+@app.on_cmd("add", "cron")
 async def _():
-    args = get_current_args()
-    task = manager.add(*args)
+    task = manager.add(*app.bot.args)
     if task:
-        await send(f"添加成功 {task}")
+        await app.send(f"添加成功 {task}")
     else:
-        await send("添加失败 存在重名任务")
+        await app.send("添加失败 存在重名任务")
 
 
-@on_cmd("remove cron")
+@app.on_cmd("remove", "cron")
 async def _():
-    args = get_current_args()
-    task = manager.remove(args[0])
+    task = manager.remove(app.bot.args[0])
     if task:
-        await send(f"移除成功 {task}")
+        await app.send(f"移除成功 {task}")
     else:
-        await send("移除失败 不存在该任务")
+        await app.send("移除失败 不存在该任务")
 
 
-@on_cmd("help cron")
+@app.on_cmd("help", "cron")
 async def _():
-    await send('''=== cron 使用帮助 ===
-               
-添加定时任务
-add cron [name] [desc] [cron]
-
-移除定时任务
-remove cron [name]
-
-查看所有定时任务
-list cron''')
+    await app.send_help()

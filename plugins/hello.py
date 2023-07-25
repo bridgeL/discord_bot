@@ -1,11 +1,8 @@
-from core import on_cmd, send
+from core import App
+
+app = App("hello")
 
 
-@on_cmd("hello")
+@app.on_cmd("hello")
 async def _():
-    await send("world!")
-
-
-@on_cmd("invite")
-async def _():
-    await send("https://discord.com/api/oauth2/authorize?client_id=1132989755416653904&permissions=2419452944&scope=bot")
+    await app.send("world!")
