@@ -2,7 +2,7 @@ from core import App
 from datetime import datetime
 from .user import manager
 
-app = App("game/checkin")
+app = App("checkin")
 
 
 @app.on_cmd("checkin")

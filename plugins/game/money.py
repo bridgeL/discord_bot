@@ -1,7 +1,7 @@
 from core import App
 from .user import manager
 
-app = App("game/money")
+app = App("money")
 
 
 @app.on_cmd("money")

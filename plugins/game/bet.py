@@ -4,7 +4,7 @@ from time import time
 from core import App
 from .user import manager
 
-app = App("game/bet")
+app = App("bet")
 app.help = '''
 猜硬币 randint(0, 1)
 
