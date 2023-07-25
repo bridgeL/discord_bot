@@ -55,8 +55,7 @@ class Task:
         self.timer.stop()
 
     def __str__(self) -> str:
-        cron = self.cron.replace("*", "\\*")
-        return f'''[{self.name}]\n{self.desc}\ncron: {cron}\n添加者：{self.uid}'''
+        return f'''[{self.name}]\n{self.desc}\ncron: `{self.cron}`\n添加者：https://discordapp.com/users/{self.uid}'''
 
 
 class Manager:
