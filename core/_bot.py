@@ -2,7 +2,7 @@ import shlex
 import discord
 from pathlib import Path
 from .hook import CmdHookPoint, Hook, HookPoint
-from .context import CURRENT_MSG, CURRENT_TEXT, CURRENT_CMD, CURRENT_PREFIX
+from .context import CURRENT_MSG, CURRENT_TEXT, CURRENT_CMD, CURRENT_PREFIX, CURRENT_REGEX
 
 
 class Bot:
@@ -31,6 +31,10 @@ class Bot:
         return self.msg.author.id
 
     @property
+    def uname(self):
+        return self.msg.author.name
+
+    @property
     def cmd(self):
         return CURRENT_CMD.get()
 
@@ -41,6 +45,10 @@ class Bot:
     @property
     def text(self):
         return CURRENT_TEXT.get()
+
+    @property
+    def regex(self):
+        return CURRENT_REGEX.get()
 
     @property
     def args(self):

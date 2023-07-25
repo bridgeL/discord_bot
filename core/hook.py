@@ -2,7 +2,7 @@ import re
 import typing
 import asyncio
 from .constant import PREFIXES
-from .context import CURRENT_CMD, CURRENT_PREFIX, CURRENT_TEXT
+from .context import CURRENT_CMD, CURRENT_PREFIX, CURRENT_TEXT, CURRENT_REGEX
 
 
 async def do_nothing(): pass
@@ -61,6 +61,7 @@ class CmdRegexMatchHook(Hook):
                     CURRENT_PREFIX.set(p)
                     CURRENT_CMD.set(self.cmd)
                     CURRENT_TEXT.set(text[len(p):][r.span()[1]:].strip())
+                    CURRENT_REGEX.set(r)
                     return True
         return False
 

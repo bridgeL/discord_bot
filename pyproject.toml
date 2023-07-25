@@ -10,6 +10,7 @@ packages = [{include = "discord_bot"}]
 python = "^3.8"
 discord = "^2.3.1"
 aiocron = "^1.8"
+pydantic = "^2.0.3"
 
 
 [build-system]
