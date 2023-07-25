@@ -8,7 +8,7 @@ app = App("bet")
 app.help = '''
 猜硬币 randint(0, 1)
 
-`.bet 10 正` 使用10金，猜硬币是正面，获胜获得20金，失败颗粒无收
+`.bet 10 正` 花费10金，猜硬币是正面，获胜获得20金，失败颗粒无收
 
 你也可以all in！
 
@@ -40,9 +40,9 @@ async def _():
         await app.send(f"{app.bot.uname} 没钱不许参加")
 
     if r:
-        await app.send(f"{app.bot.uname} 赌正！")
+        await app.send(f"{app.bot.uname} 出资{n}金 赌正！")
     else:
-        await app.send(f"{app.bot.uname} 赌反！")
+        await app.send(f"{app.bot.uname} 出资{n}金 赌反！")
 
     await sleep(1)
 

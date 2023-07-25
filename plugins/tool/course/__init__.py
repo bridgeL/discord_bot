@@ -19,8 +19,8 @@ def get_data():
     return data
 
 
-def find_all(key):
-    return [v for v in data.values() if key in v["title"]]
+def find_all(key: str):
+    return [v for v in data.values() if key.lower() in v["title"].lower()]
 
 
 data = get_data()
