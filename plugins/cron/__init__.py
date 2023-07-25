@@ -5,6 +5,8 @@ from core import App
 
 app = App("cron")
 app.help = '''
+本定时任务应用最高精度为1分钟，请不要设置秒级精度的cron
+
 添加定时任务
 add [name] [desc] [cron]
 
@@ -17,9 +19,11 @@ list
 退出管理界面
 exit
 
-cron语法规则：https://help.aliyun.com/document_detail/133509.html
+注意：包含空格的[name],[desc],[cron]请使用""包裹，例如：
 
-注意，本定时任务应用最高精度为1分钟，请不要设置秒级精度的cron
+`.add "test 1" 仅在星期二有效；从第1分钟开始，每10分钟触发一次 "1/10 * * * 2"`
+
+cron语法规则：https://help.aliyun.com/document_detail/133509.html
 '''.strip()
 
 
@@ -43,7 +47,7 @@ class Task:
     def start(self):
         @aiocron.crontab(self.cron, start=False)
         async def timer():
-            await app.send(f"定时任务：[{self.name}]\n{self.desc}", cid=self.cid)
+            await app.send(f"定时任务提醒 [{self.name}]\n{self.desc}", cid=self.cid)
         self.timer = timer
         self.timer.start()
 
@@ -58,6 +62,11 @@ class Task:
 class Manager:
     def __init__(self) -> None:
         self.path = Path(__file__).with_name("data.json")
+
+        if not self.path.exists():
+            with self.path.open("w+", encoding="utf8") as f:
+                f.write("[]")
+
         data = json.loads(self.path.read_text("utf8"))
         self.tasks = [Task(**d) for d in data]
 
@@ -112,14 +121,14 @@ async def _():
 @app.on_cmd("cron")
 async def _():
     app.state = "cron"
-    await app.send("已启动cron")
+    await app.send("已进入cron")
     await app.send_help()
 
 
 @app.on_cmd("exit", "cron")
 async def _():
     app.state = ""
-    await app.send("已关闭cron")
+    await app.send("已退出cron")
 
 
 @app.on_cmd("list", "cron")
@@ -144,13 +153,9 @@ async def _():
 
 @app.on_cmd("remove", "cron")
 async def _():
-    task = manager.remove(app.bot.args[0])
+    name = app.bot.args[0]
+    task = manager.remove(name)
     if task:
         await app.send(f"移除成功 {task}")
     else:
-        await app.send("移除失败 不存在该任务")
-
-
-@app.on_cmd("help", "cron")
-async def _():
-    await app.send_help()
+        await app.send(f"移除失败 不存在任务 [{name}]")

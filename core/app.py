@@ -52,7 +52,7 @@ class App:
         await self.bot.send(text, cid)
 
     async def send_help(self, cid=0):
-        await self.bot.send(self.help, cid)
+        await self.bot.send(f"=== {self.name} 使用帮助 ===\n\n"+self.help, cid)
 
 
 ALL_APPS: List[App] = []
