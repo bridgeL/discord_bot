@@ -121,14 +121,14 @@ async def _():
 @app.on_cmd("cron")
 async def _():
     app.state = "cron"
-    await app.send("已进入cron")
+    await app.send("已进入cron管理界面")
     await app.send_help()
 
 
 @app.on_cmd("exit", "cron")
 async def _():
     app.state = ""
-    await app.send("已退出cron")
+    await app.send("已退出cron管理界面")
 
 
 @app.on_cmd("list", "cron")
