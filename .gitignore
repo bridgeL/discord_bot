@@ -1,5 +1,6 @@
 /token.txt
 /plugins/cron/data.json
 /plugins/game/data.json
+/plugins/tool/teach/data.json
 __pycache__
 .*

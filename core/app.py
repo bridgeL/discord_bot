@@ -26,6 +26,10 @@ class App:
         ALL_APPS.append(self)
 
     @property
+    def channel(self):
+        return self.bot.msg.channel
+
+    @property
     def state(self):
         # id = f"{self.bot.cid}_{self.bot.uid}"
         id = self.bot.cid
@@ -63,27 +67,29 @@ class App:
     # important function
 
     async def send(self, text: str, cid=0):
-        # for safe
-        n = len(text)
-        if n <= 1800:
-            await self.bot.send(text, cid)
-            return
+        await self.bot.send(text, cid)
+        
+        # # for safe
+        # n = len(text)
+        # if n <= 1800:
+        #     await self.bot.send(text, cid)
+        #     return
 
-        j = 0
-        ts = []
+        # j = 0
+        # ts = []
 
-        for i in range(n):
-            if text[i] == "\n":
-                if i - j > 1200:
-                    ts.append(text[j:i].strip())
-                    j = i
-            elif i - j > 1800:
-                ts.append(text[j:i].strip())
-                j = i
-        ts.append(text[j:])
+        # for i in range(n):
+        #     if text[i] == "\n":
+        #         if i - j > 1200:
+        #             ts.append(text[j:i].strip())
+        #             j = i
+        #     elif i - j > 1800:
+        #         ts.append(text[j:i].strip())
+        #         j = i
+        # ts.append(text[j:])
 
-        for t in ts:
-            await self.bot.send(t, cid)
+        # for t in ts:
+        #     await self.bot.send(t, cid)
 
     async def send_help(self, cid=0):
         await self.bot.send(f"=== {self.name} 使用帮助 ===\n\n"+self.help, cid)

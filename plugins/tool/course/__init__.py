@@ -1,4 +1,6 @@
 import json
+from random import sample
+import discord
 from pathlib import Path
 from core import App
 
@@ -19,8 +21,18 @@ def get_data():
     return data
 
 
-def find_all(key: str):
-    return [v for v in data.values() if key.lower() in v["title"].lower()]
+def find_all(keys):
+    keys = [k.lower() for k in keys]
+    r = []
+    for v in data.values():
+        t = v["title"].lower()
+        for k in keys:
+            if k not in t:
+                break
+        else:
+            r.append(v)
+
+    return r
 
 
 data = get_data()
@@ -28,16 +40,22 @@ data = get_data()
 
 @app.on_cmd("course")
 async def _():
-    key = app.bot.text
-    if not key:
+    keys = app.bot.args
+    if not keys:
         await app.send_help()
         return
 
-    data = find_all(key)
+    data = find_all(keys)
 
     if not data:
         await app.send("没有查到相关课程")
         return
+
+    if len(data) > 20:
+        await app.send("搜索到超过20条结果，仅随机展示其中的20条，如想获得进一步信息，请细化你的搜索关键词")
+        data = sample(data, 20)
+        
+    data.sort(key=lambda d: d["title"])
 
     if len(data) > 1:
         t = "\n".join(d["title"] for d in data)
@@ -46,7 +64,10 @@ async def _():
 
     data = data[0]
 
-    await app.send(f"""课程名称：{data['title'][len(data['id'])+1:]}
-课程ID: {data['id']}
-课程链接: {data['link']}
-课程时间：{data['dates'].replace('Displaying Dates: ', '')}""")
+    embed = discord.Embed(
+        title=data['id'], url=data['link'],
+        description=f"- 课程名称：{data['title'][len(data['id'])+1:]}\n- 课程时间：{data['dates'].replace('Displaying Dates: ', '')}",
+        color=0xFF5733
+    )
+
+    await app.channel.send(embed=embed)
