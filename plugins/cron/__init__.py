@@ -23,7 +23,7 @@ exit
 
 `.add "test 1" 仅在星期二有效；从第1分钟开始，每10分钟触发一次 "1/10 * * * 2"`
 
-cron语法规则：https://help.aliyun.com/document_detail/133509.html
+cron语法规则：<https://help.aliyun.com/document_detail/133509.html>
 '''.strip()
 
 
@@ -120,8 +120,7 @@ async def _():
 @app.on_cmd("cron")
 async def _():
     app.state = "cron"
-    await app.send("已进入cron管理界面")
-    await app.send_help()
+    await app.send("已进入cron管理界面，发送`.help cron`获取帮助信息")
 
 
 @app.on_cmd("exit", "cron")
