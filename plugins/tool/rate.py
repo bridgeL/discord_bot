@@ -3,7 +3,7 @@ import requests
 from table2ascii import table2ascii as t2a, PresetStyle
 
 app = App("rate")
-app.help = "查询今日澳元汇率"
+app.help = "查询今日澳元汇率 `.rate` / `.汇率`"
 
 url = "https://finance.pae.baidu.com/async"
 headers = {}
