@@ -26,6 +26,7 @@ params = {
 }
 
 
+@app.on_cmd("汇率")
 @app.on_cmd("rate")
 async def _():
     await app.send("查询今日澳元汇率：稍等...")

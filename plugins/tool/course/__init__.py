@@ -65,8 +65,8 @@ async def _():
     data = data[0]
 
     embed = discord.Embed(
-        title=data['id'], url=data['link'],
-        description=f"- 课程名称：{data['title'][len(data['id'])+1:]}\n- 课程时间：{data['dates'].replace('Displaying Dates: ', '')}",
+        title=data['id'],
+        description=f"- 课程名称：{data['title'][len(data['id'])+1:]}\n- 课程时间：{data['dates'].replace('Displaying Dates: ', '')}\n- 课程链接：{data['link']}",
         color=0xFF5733
     )
 
