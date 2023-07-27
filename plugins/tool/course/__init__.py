@@ -54,19 +54,22 @@ async def _():
     if len(data) > 20:
         await app.send("搜索到超过20条结果，仅随机展示其中的20条，如想获得进一步信息，请细化你的搜索关键词")
         data = sample(data, 20)
-        
+
     data.sort(key=lambda d: d["title"])
 
-    if len(data) > 1:
+    if len(data) > 5:
         t = "\n".join(d["title"] for d in data)
         await app.send(f"搜索到相关课程：\n{t}\n如需进一步信息请查询完整名称")
         return
 
-    data = data[0]
+    s = ""
+    for d in data:
+        s += f"- 课程代码：[{d['id']}]({d['link']})\n- 课程名称：{d['title'][len(d['id'])+1:]}\n- 课程时间：{d['dates'].replace('Displaying Dates: ', '')}\n"
+    description = s[:-1]
 
     embed = discord.Embed(
-        title=data['id'],
-        description=f"- 课程名称：{data['title'][len(data['id'])+1:]}\n- 课程时间：{data['dates'].replace('Displaying Dates: ', '')}\n- 课程链接：{data['link']}",
+        title="课程查询",
+        description=description,
         color=0xFF5733
     )
 
