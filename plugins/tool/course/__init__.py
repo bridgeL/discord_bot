@@ -64,7 +64,11 @@ async def _():
 
     s = ""
     for d in data:
-        s += f"- 课程代码：[{d['id']}]({d['link']})\n- 课程名称：{d['title'][len(d['id'])+1:]}\n- 课程时间：{d['dates'].replace('Displaying Dates: ', '')}\n"
+        if d["link"]:
+            ss = f"- 课程代码：[{d['id']}]({d['link']})\n"
+        else:
+            ss = f"- 课程代码：{d['id']}]\n"
+        s += f"{ss}- 课程名称：{d['title'][len(d['id'])+1:]}\n- 课程时间：{d['dates'].replace('Displaying Dates: ', '')}\n"
     description = s[:-1]
 
     embed = discord.Embed(
