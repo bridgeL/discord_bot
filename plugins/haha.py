@@ -3,7 +3,7 @@ from core import App
 app = App("haha")
 
 
-@app.on_regex(r"(ha)+")
+@app.on_regex(r"^(ha)+")
 async def _():
     n = len(app.bot.regex.group()) // 2
     d = "笑"*n
