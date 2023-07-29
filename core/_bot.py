@@ -76,12 +76,16 @@ class Bot:
 
     # important function
 
-    async def send(self, text: str, cid=0):
+    async def send(self, text: str, cid=0, uid=0):
         if cid:
-            channel = self.client.get_channel(cid)
+            channel = await self.client.fetch_channel(cid)
+            await channel.send(text)  # type: ignore
+        elif uid:
+            user = await self.client.fetch_user(uid)
+            await user.send(text)  # type: ignore
         else:
             channel = self.msg.channel
-        await channel.send(text)  # type: ignore
+            await channel.send(text)
 
     def run_forever(self):
         self.client.run(self.token)

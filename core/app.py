@@ -66,8 +66,8 @@ class App:
 
     # important function
 
-    async def send(self, text: str, cid=0):
-        await self.bot.send(text, cid)
+    async def send(self, text: str, cid=0, uid=0):
+        await self.bot.send(text, cid, uid)
         
         # # for safe
         # n = len(text)
