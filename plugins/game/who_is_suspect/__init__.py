@@ -17,9 +17,7 @@ with Path(__file__).with_name("data.txt").open("r", encoding="utf8") as f:
 
 cat = App("谁是卧底")
 cat.help = '''
-至少4人游玩，游玩前请加bot好友，否则无法通过私聊告知关键词
-参与玩家的群名片不要重名，否则会产生非预期的错误=_=||
-卧底只有一个
+至少4人游玩，通过私聊告知关键词。卧底只有一个
 
 -join
 -leave
