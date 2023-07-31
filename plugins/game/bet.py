@@ -38,6 +38,7 @@ async def _():
 
     if n <= 0:
         await app.send(f"{app.bot.uname} 没钱不许参加")
+        return
 
     if r:
         await app.send(f"{app.bot.uname} 出资{n}金 赌正！")
