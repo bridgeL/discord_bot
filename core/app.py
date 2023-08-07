@@ -63,7 +63,7 @@ class App:
             self.bot.cmd_hook_point.add(cmd, func, True)
             return func
         return decorator
-
+    
     # important function
 
     async def send(self, text: str, cid=0, uid=0):

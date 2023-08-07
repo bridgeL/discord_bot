@@ -7,6 +7,7 @@ class User(BaseModel):
     uid: int
     checkin_date: str = ""
     money: int = 0
+    msg_cnt: int = 0
 
 
 class Manager:

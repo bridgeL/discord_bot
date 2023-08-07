@@ -14,6 +14,7 @@ class Bot:
         self.client = discord.Client(intents=intents)
 
         self.cmd_hook_point = CmdHookPoint()
+        self.msg_hook_point = HookPoint()
         self.start_hook_point = HookPoint()
 
     # quick property
@@ -68,9 +69,15 @@ class Bot:
             return func
         return decorator
 
+    def on_msg(self):
+        def decorator(func):
+            h = Hook(func)
+            self.msg_hook_point.hooks.append(h)
+            return func
+        return decorator
+
     def on_start(self, func):
-        h = Hook()
-        h.func = func
+        h = Hook(func)
         self.start_hook_point.hooks.append(h)
         return func
 
@@ -105,6 +112,7 @@ async def on_message(msg: discord.message.Message):
 
     CURRENT_MSG.set(msg)
     await bot.cmd_hook_point.run(msg.content)
+    await bot.msg_hook_point.run()
 
 
 @bot.client.event
