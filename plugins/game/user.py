@@ -20,7 +20,7 @@ class Manager:
         data = json.loads(self.path.read_text("utf8"))
         self.users = [User(**d) for d in data]
 
-    def get(self, uid):
+    def get(self, uid: int):
         for user in self.users:
             if user.uid == uid:
                 return user
