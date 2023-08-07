@@ -37,6 +37,10 @@ async def _():
     r = 0 if r == "反" else 1
 
     if n <= 0:
+        await app.send(f"{app.bot.uname} 你小子")
+        return
+
+    if n > user.money:
         await app.send(f"{app.bot.uname} 没钱不许参加")
         return
 
