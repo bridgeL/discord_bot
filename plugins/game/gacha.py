@@ -49,7 +49,7 @@ async def _():
     else:
         n = int(n)
 
-    if n <= 0:
+    if n <= 0 or n > 10000:
         await app.send(f"{app.bot.uname} 你小子")
         return
 
