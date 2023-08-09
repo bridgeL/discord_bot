@@ -279,7 +279,14 @@ async def exit_room():
 
 @cat.on_cmd("exit", "play")
 async def exit_play():
-    await cat.send("游戏已开始，你确定要终结游戏吗？请使用命令：强制退出")
+    await cat.send("游戏已开始，你确定要终结游戏吗？请使用命令：eexit")
+
+
+@cat.on_cmd("eexit", "play")
+async def eexit_room():
+    '''关闭游戏'''
+    cat.state = ""
+    await cat.send("谁是卧底已关闭")
 
 
 @cat.on_cmd("join", "room")

@@ -33,7 +33,7 @@ class Bot:
 
     @property
     def uname(self):
-        return self.msg.author.name
+        return self.msg.author.display_name
 
     @property
     def cmd(self):
